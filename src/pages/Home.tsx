@@ -48,7 +48,7 @@ export default function Home() {
             <div className="space-y-8">
               <div className="space-y-4">
                 <h1 className="font-heading font-bold text-4xl lg:text-6xl text-white leading-tight">
-                  One-stop destination for{' '}
+                  One-stop destination for123{' '}
                   <span className="text-accent">Healthy, Nutraceutical</span> & Protein Products
                 </h1>
                 <p className="text-lg text-white/90 max-w-xl">
