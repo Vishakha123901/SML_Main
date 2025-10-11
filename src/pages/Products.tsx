@@ -1,21 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Filter, ExternalLink, Star } from 'lucide-react';
+import { Search, Filter, ExternalLink, Star, ShoppingCart, Store, Instagram, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { products, categories } from '@/data/products';
+import { Product, categories as predefinedCategories } from '@/data/products';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { getProducts } from '@/lib/productFirebase';
 
 export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    const unsubscribe = getProducts(
+      (fetchedProducts) => {
+        setProducts(fetchedProducts);
+        setLoading(false);
+      },
+      (errorMessage) => {
+        setError(errorMessage);
+        setLoading(false);
+      }
+    );
+    return () => unsubscribe();
+  }, []);
 
   const filteredProducts = products.filter(product => {
     const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.highlights.some(h => h.toLowerCase().includes(searchTerm.toLowerCase()));
+                         product.highlights.some(h => h.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                         product.description?.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  if (loading) {
+    return <div className="flex justify-center items-center min-h-[calc(100vh-64px)]"><p>Loading products...</p></div>;
+  }
+
+  if (error) {
+    return <div className="flex justify-center items-center min-h-[calc(100vh-64px)]"><p className="text-destructive">Error: {error}</p></div>;
+  }
 
   return (
     <div>
@@ -54,7 +84,7 @@ export default function Products() {
             <div className="flex items-center space-x-2">
               <Filter className="w-4 h-4 text-muted-foreground" />
               <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
+                {predefinedCategories.map((category) => (
                   <Button
                     key={category}
                     variant={selectedCategory === category ? "default" : "outline"}
@@ -128,21 +158,50 @@ export default function Products() {
                   </div>
                   
                   <div className="space-y-2">
-                    <div className="flex flex-wrap gap-1">
-                      {product.marketplaceLinks.map((link) => (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
                         <Button 
-                          key={link.label} 
                           size="sm" 
-                          className="btn-primary text-xs flex-1"
-                          asChild
+                          className="btn-primary w-full"
                         >
-                          <a href={link.url} target="_blank" rel="noopener noreferrer">
-                            {link.label}
-                            <ExternalLink className="w-3 h-3 ml-1" />
-                          </a>
+                          Buy Now
                         </Button>
-                      ))}
-                    </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        {product.socialLinks?.flipkart && (
+                          <DropdownMenuItem asChild>
+                            <a href={product.socialLinks.flipkart} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                              <ShoppingCart className="w-4 h-4" />
+                              Flipkart
+                            </a>
+                          </DropdownMenuItem>
+                        )}
+                        {product.socialLinks?.amazon && (
+                          <DropdownMenuItem asChild>
+                            <a href={product.socialLinks.amazon} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                              <Store className="w-4 h-4" />
+                              Amazon
+                            </a>
+                          </DropdownMenuItem>
+                        )}
+                        {product.socialLinks?.insta && (
+                          <DropdownMenuItem asChild>
+                            <a href={product.socialLinks.insta} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                              <Instagram className="w-4 h-4" />
+                              Insta
+                            </a>
+                          </DropdownMenuItem>
+                        )}
+                        {product.socialLinks?.blinkit && (
+                          <DropdownMenuItem asChild>
+                            <a href={product.socialLinks.blinkit} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                              <Truck className="w-4 h-4" />
+                              Blinkit
+                            </a>
+                          </DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                     <Button size="sm" variant="outline" className="w-full" asChild>
                       <Link to={`/products/${product.id}`}>View Details</Link>
                     </Button>

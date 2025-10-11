@@ -10,6 +10,12 @@ export interface Product {
   badges: string[];
   highlights: string[];
   marketplaceLinks: { label: string; url: string }[];
+  socialLinks?: {
+    flipkart?: string;
+    amazon?: string;
+    insta?: string;
+    blinkit?: string;
+  };
   nutritionImage?: string;
   directions?: string;
   storage?: string;
@@ -33,6 +39,12 @@ export const products: Product[] = [
       { label: "Buy on Flipkart", url: "https://flipkart.com/placeholder" },
       { label: "Buy on Amazon", url: "https://amazon.in/placeholder" }
     ],
+    socialLinks: {
+      flipkart: "https://www.flipkart.com/social-placeholder",
+      amazon: "https://www.amazon.in/social-placeholder",
+      insta: "https://www.instagram.com/social-placeholder",
+      blinkit: "https://www.blinkit.com/social-placeholder",
+    },
     directions: "Mix 2-3 tablespoons in 150ml water or milk. Stir well and consume.",
     storage: "Store in a cool, dry place. Keep away from direct sunlight.",
     description: "Our premium Ragi Malt in delicious chocolate flavor is packed with essential nutrients including iron, calcium, and dietary fiber. Perfect for all age groups."
@@ -53,6 +65,12 @@ export const products: Product[] = [
       { label: "Buy on Flipkart", url: "https://flipkart.com/placeholder" },
       { label: "Buy on Amazon", url: "https://amazon.in/placeholder" }
     ],
+    socialLinks: {
+      flipkart: "https://www.flipkart.com/social-placeholder",
+      amazon: "https://www.amazon.in/social-placeholder",
+      insta: "https://www.instagram.com/social-placeholder",
+      blinkit: "https://www.blinkit.com/social-placeholder",
+    },
     directions: "Mix 2-3 tablespoons in 150ml water or milk. Stir well and consume.",
     storage: "Store in a cool, dry place. Keep away from direct sunlight.",
     description: "Natural vanilla flavored Ragi Malt offering complete nutrition with the goodness of finger millet."
@@ -73,6 +91,12 @@ export const products: Product[] = [
       { label: "Buy on Flipkart", url: "https://flipkart.com/placeholder" },
       { label: "Buy on Amazon", url: "https://amazon.in/placeholder" }
     ],
+    socialLinks: {
+      flipkart: "https://www.flipkart.com/social-placeholder",
+      amazon: "https://www.amazon.in/social-placeholder",
+      insta: "https://www.instagram.com/social-placeholder",
+      blinkit: "https://www.blinkit.com/social-placeholder",
+    },
     directions: "Mix 1-2 teaspoons in 200ml water. Drink immediately. Follow with another glass of water.",
     storage: "Store in airtight container. Keep away from moisture.",
     description: "Premium quality Isabgol (Psyllium) husk that supports digestive health and regularity."
@@ -93,6 +117,12 @@ export const products: Product[] = [
       { label: "Buy on Flipkart", url: "https://flipkart.com/placeholder" },
       { label: "Buy on Amazon", url: "https://amazon.in/placeholder" }
     ],
+    socialLinks: {
+      flipkart: "https://www.flipkart.com/social-placeholder",
+      amazon: "https://www.amazon.in/social-placeholder",
+      insta: "https://www.instagram.com/social-placeholder",
+      blinkit: "https://www.blinkit.com/social-placeholder",
+    },
     directions: "Mix 1 scoop (30g) in 200ml water or milk. Consume post-workout or as directed.",
     storage: "Store in cool, dry place. Close lid tightly after use.",
     description: "High-performance peptide protein for serious fitness enthusiasts. Proprietary food product (not for medicinal use)."
@@ -113,6 +143,12 @@ export const products: Product[] = [
       { label: "Buy on Flipkart", url: "https://flipkart.com/placeholder" },
       { label: "Buy on Amazon", url: "https://amazon.in/placeholder" }
     ],
+    socialLinks: {
+      flipkart: "https://www.flipkart.com/social-placeholder",
+      amazon: "https://www.amazon.in/social-placeholder",
+      insta: "https://www.instagram.com/social-placeholder",
+      blinkit: "https://www.blinkit.com/social-placeholder",
+    },
     directions: "Mix 1 scoop (25g) in 200ml water. Consume as per dietary requirements.",
     storage: "Store in cool, dry place. Keep away from direct sunlight.",
     description: "Specially formulated protein supplement for diabetic individuals. Proprietary food product (not for medicinal use)."
@@ -133,6 +169,12 @@ export const products: Product[] = [
       { label: "Buy on Flipkart", url: "https://flipkart.com/placeholder" },
       { label: "Buy on Amazon", url: "https://amazon.in/placeholder" }
     ],
+    socialLinks: {
+      flipkart: "https://www.flipkart.com/social-placeholder",
+      amazon: "https://www.amazon.in/social-placeholder",
+      insta: "https://www.instagram.com/social-placeholder",
+      blinkit: "https://www.blinkit.com/social-placeholder",
+    },
     directions: "Mix 1 scoop (20g) in 150ml milk. Give to children above 2 years.",
     storage: "Store in cool, dry place. Keep away from children's reach.",
     description: "Nutritionally balanced protein supplement designed specifically for growing children. Proprietary food product (not for medicinal use)."
@@ -153,6 +195,12 @@ export const products: Product[] = [
       { label: "Buy on Flipkart", url: "https://flipkart.com/placeholder" },
       { label: "Buy on Amazon", url: "https://amazon.in/placeholder" }
     ],
+    socialLinks: {
+      flipkart: "https://www.flipkart.com/social-placeholder",
+      amazon: "https://www.amazon.in/social-placeholder",
+      insta: "https://www.instagram.com/social-placeholder",
+      blinkit: "https://www.blinkit.com/social-placeholder",
+    },
     directions: "Mix 1 scoop (30g) in 200ml milk. Consume twice daily or as advised by healthcare professional.",
     storage: "Store in cool, dry place. Close container tightly after use.",
     description: "Specially formulated nutrition support for expecting and lactating mothers. Proprietary food product (not for medicinal use)."

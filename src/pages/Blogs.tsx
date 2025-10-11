@@ -1,7 +1,10 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, User, ArrowRight, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { BlogPost } from '@/data/blog';
+import { getBlogPosts } from '@/lib/blogFirebase';
 
 const blogCategories = [
   "All",
@@ -11,76 +14,44 @@ const blogCategories = [
   "White Label Insights"
 ];
 
-const blogPosts = [
-  {
-    id: "protein-importance-daily-diet",
-    title: "The Importance of Protein in Your Daily Diet",
-    excerpt: "Discover why protein is essential for your body and how to incorporate quality protein sources into your daily meals for optimal health and wellness.",
-    date: "2024-01-15",
-    author: "Dr. Rajesh Sharma",
-    category: "Protein",
-    tags: ["Protein", "Nutrition", "Health"],
-    image: "/api/placeholder/400/200",
-    readTime: "5 min read"
-  },
-  {
-    id: "digestive-health-gut-wellness",
-    title: "Understanding Digestive Health: A Complete Guide to Gut Wellness",
-    excerpt: "Learn about the importance of digestive health and practical tips to maintain a healthy gut microbiome for better overall wellness.",
-    date: "2024-01-10",
-    author: "Nutritionist Priya Patel",
-    category: "Digestive Health",
-    tags: ["Digestive Health", "Gut Health", "Wellness"],
-    image: "/api/placeholder/400/200",
-    readTime: "8 min read"
-  },
-  {
-    id: "ragi-superfood-benefits",
-    title: "Ragi: The Ancient Superfood Making a Modern Comeback",
-    excerpt: "Explore the nutritional benefits of ragi (finger millet) and why this ancient grain is becoming popular among health-conscious consumers.",
-    date: "2024-01-05",
-    author: "Food Scientist Dr. Meera Singh",
-    category: "Nutrition",
-    tags: ["Ragi", "Superfoods", "Ancient Grains"],
-    image: "/api/placeholder/400/200",
-    readTime: "6 min read"
-  },
-  {
-    id: "white-label-success-strategies",
-    title: "Building a Successful Health Product Brand: White Label Manufacturing Insights",
-    excerpt: "Key strategies for entrepreneurs looking to launch their own health product brand using white label manufacturing services.",
-    date: "2023-12-28",
-    author: "Industry Expert Amit Kumar",
-    category: "White Label Insights",
-    tags: ["Business", "Entrepreneurship", "Manufacturing"],
-    image: "/api/placeholder/400/200",
-    readTime: "10 min read"
-  },
-  {
-    id: "protein-supplements-guide",
-    title: "Choosing the Right Protein Supplement: A Comprehensive Guide",
-    excerpt: "Navigate the world of protein supplements with our detailed guide covering different types, benefits, and how to choose the right one for your goals.",
-    date: "2023-12-20",
-    author: "Sports Nutritionist Dr. Vikram Joshi",
-    category: "Protein",
-    tags: ["Protein Supplements", "Fitness", "Nutrition"],
-    image: "/api/placeholder/400/200",
-    readTime: "7 min read"
-  },
-  {
-    id: "natural-vs-synthetic-vitamins",
-    title: "Natural vs Synthetic Vitamins: What You Need to Know",
-    excerpt: "Understand the differences between natural and synthetic vitamins, their bioavailability, and which option might be better for your health needs.",
-    date: "2023-12-15",
-    author: "Research Scientist Dr. Anjali Verma",
-    category: "Nutrition",
-    tags: ["Vitamins", "Natural Health", "Research"],
-    image: "/api/placeholder/400/200",
-    readTime: "9 min read"
-  }
-];
-
 export default function Blogs() {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    const unsubscribe = getBlogPosts(
+      (fetchedPosts) => {
+        setBlogPosts(fetchedPosts);
+        setLoading(false);
+      },
+      (errorMessage) => {
+        setError(errorMessage);
+        setLoading(false);
+      }
+    );
+    return () => unsubscribe();
+  }, []);
+
+  const filteredBlogPosts = blogPosts.filter(post => {
+    return selectedCategory === 'All' || post.category === selectedCategory;
+  });
+
+  if (loading) {
+    return <div className="flex justify-center items-center min-h-[calc(100vh-64px)]"><p>Loading blog posts...</p></div>;
+  }
+
+  if (error) {
+    return <div className="flex justify-center items-center min-h-[calc(100vh-64px)]"><p className="text-destructive">Error: {error}</p></div>;
+  }
+
+  // Using the first fetched blog post as the featured post, or null if none exist
+  const featuredPost = filteredBlogPosts.length > 0 ? filteredBlogPosts[0] : null;
+  const latestArticles = filteredBlogPosts.slice(1); // All other posts are latest articles
+
   return (
     <div>
       {/* Hero Section */}
@@ -105,9 +76,10 @@ export default function Blogs() {
             {blogCategories.map((category) => (
               <Button
                 key={category}
-                variant={category === "All" ? "default" : "outline"}
+                variant={selectedCategory === category ? "default" : "outline"}
                 size="sm"
-                className={category === "All" ? "btn-primary" : ""}
+                onClick={() => setSelectedCategory(category)}
+                className={selectedCategory === category ? "btn-primary" : ""}
               >
                 {category}
               </Button>
@@ -117,52 +89,53 @@ export default function Blogs() {
       </section>
 
       {/* Featured Post */}
-      <section className="py-16">
-        <div className="container-width section-padding">
-          <div className="healthcare-card p-8 lg:p-12">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div className="space-y-6">
-                <div className="flex items-center space-x-2">
-                  <Badge className="bg-accent text-accent-foreground">Featured</Badge>
-                  <Badge variant="outline">{blogPosts[0].category}</Badge>
-                </div>
-                <div>
-                  <h2 className="font-heading font-bold text-2xl lg:text-3xl text-foreground mb-4">
-                    {blogPosts[0].title}
-                  </h2>
-                  <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-                    {blogPosts[0].excerpt}
-                  </p>
-                  <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-6">
-                    <div className="flex items-center space-x-1">
-                      <User className="w-4 h-4" />
-                      <span>{blogPosts[0].author}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="w-4 h-4" />
-                      <span>{new Date(blogPosts[0].date).toLocaleDateString()}</span>
-                    </div>
-                    <span>{blogPosts[0].readTime}</span>
+      {featuredPost && (
+        <section className="py-16">
+          <div className="container-width section-padding">
+            <div className="healthcare-card p-8 lg:p-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div className="space-y-6">
+                  <div className="flex items-center space-x-2">
+                    <Badge className="bg-accent text-accent-foreground">Featured</Badge>
+                    <Badge variant="outline">{featuredPost.category}</Badge> {/* Use explicit category */}
                   </div>
+                  <div>
+                    <h2 className="font-heading font-bold text-2xl lg:text-3xl text-foreground mb-4">
+                      {featuredPost.title}
+                    </h2>
+                    <p className="text-muted-foreground text-lg leading-relaxed mb-6">
+                      {featuredPost.shortDescription}
+                    </p>
+                    <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-6">
+                      <div className="flex items-center space-x-1">
+                        <User className="w-4 h-4" />
+                        <span>{featuredPost.author}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Calendar className="w-4 h-4" />
+                        <span>{new Date(featuredPost.publishDate).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Button className="btn-primary" asChild>
+                    <Link to={`/blogs/${featuredPost.id}`}>
+                      Read Full Article
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                  </Button>
                 </div>
-                <Button className="btn-primary" asChild>
-                  <Link to={`/blogs/${blogPosts[0].id}`}>
-                    Read Full Article
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Link>
-                </Button>
-              </div>
-              <div className="aspect-video rounded-lg overflow-hidden">
-                <img 
-                  src={blogPosts[0].image}
-                  alt={blogPosts[0].title}
-                  className="w-full h-full object-cover"
-                />
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <img 
+                    src={featuredPost.mainImage}
+                    alt={featuredPost.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Blog Grid */}
       <section className="pb-16 lg:pb-24">
@@ -177,66 +150,73 @@ export default function Blogs() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.slice(1).map((post) => (
-              <article key={post.id} className="healthcare-card overflow-hidden group">
-                <div className="aspect-video overflow-hidden">
-                  <img 
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
-                <div className="p-6 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Badge variant="outline" className="text-xs">
-                      {post.category}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">{post.readTime}</span>
+            {latestArticles.length === 0 ? (
+              <div className="col-span-full text-center py-12">
+                <p className="text-muted-foreground">No articles found. Add new blog posts from the admin panel.</p>
+              </div>
+            ) : (
+              latestArticles.map((post) => (
+                <article key={post.id} className="healthcare-card overflow-hidden group">
+                  <div className="aspect-video overflow-hidden">
+                    <img 
+                      src={post.mainImage}
+                      alt={post.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
-                  
-                  <div>
-                    <h3 className="font-heading font-semibold text-lg text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                      {post.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center space-x-4 text-xs text-muted-foreground">
-                    <div className="flex items-center space-x-1">
-                      <User className="w-3 h-3" />
-                      <span>{post.author}</span>
+                  <div className="p-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Badge variant="outline" className="text-xs">
+                        {post.category}
+                      </Badge> {/* Use explicit category */}
+                      {/* <span className="text-xs text-muted-foreground">{post.readTime}</span> */}
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="w-3 h-3" />
-                      <span>{new Date(post.date).toLocaleDateString()}</span>
+                    
+                    <div>
+                      <h3 className="font-heading font-semibold text-lg text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                        {post.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm line-clamp-3">
+                        {post.shortDescription}
+                      </p>
                     </div>
-                  </div>
 
-                  <div className="flex flex-wrap gap-1">
-                    {post.tags.slice(0, 3).map((tag) => (
-                      <span key={tag} className="inline-flex items-center space-x-1 text-xs text-muted-foreground">
-                        <Tag className="w-3 h-3" />
-                        <span>{tag}</span>
-                      </span>
-                    ))}
-                  </div>
+                    <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                      <div className="flex items-center space-x-1">
+                        <User className="w-3 h-3" />
+                        <span>{post.author}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Calendar className="w-3 h-3" />
+                        <span>{new Date(post.publishDate).toLocaleDateString()}</span>
+                      </div>
+                    </div>
 
-                  <Button variant="outline" size="sm" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors" asChild>
-                    <Link to={`/blogs/${post.id}`}>Read Article</Link>
-                  </Button>
-                </div>
-              </article>
-            ))}
+                    {/* Removed tags as BlogPost interface does not currently support it directly */}
+                    {/* <div className="flex flex-wrap gap-1">
+                      {post.tags.slice(0, 3).map((tag) => (
+                        <span key={tag} className="inline-flex items-center space-x-1 text-xs text-muted-foreground">
+                          <Tag className="w-3 h-3" />
+                          <span>{tag}</span>
+                        </span>
+                      ))}
+                    </div> */}
+
+                    <Button variant="outline" size="sm" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors" asChild>
+                      <Link to={`/blogs/${post.id}`}>Read Article</Link>
+                    </Button>
+                  </div>
+                </article>
+              ))
+            )}
           </div>
 
           {/* Load More */}
-          <div className="text-center mt-12">
+          {/* <div className="text-center mt-12">
             <Button variant="outline" size="lg">
               Load More Articles
             </Button>
-          </div>
+          </div> */}
         </div>
       </section>
 

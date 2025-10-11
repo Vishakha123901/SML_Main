@@ -1,3 +1,5 @@
+
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Shield, Building2, Users, Microscope, Instagram, ExternalLink, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -5,11 +7,37 @@ import { Badge } from '@/components/ui/badge';
 import { products, certifications, companyInfo } from '@/data/products';
 import { useInView } from '@/hooks/useInView';
 import heroImage from '@/assets/hero-healthcare.jpg';
-import InstagramFeed from '@/components/InstagramFeed';
 
 export default function Home() {
   const featuredProducts = products.slice(0, 3);
 
+  useEffect(() => {
+    // Load Elfsight script only once
+    if (!document.getElementById('elfsight-platform-script')) {
+      const script = document.createElement('script');
+      script.id = 'elfsight-platform-script';
+      script.src = 'https://elfsightcdn.com/platform.js';
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    }
+    // Hide Elfsight watermark (for testing purposes only)
+    const interval = setInterval(() => {
+      const badge = document.querySelector(
+        '.eapps-widget-toolbar, .eapps-link, a[href*="elfsight.com"]'
+      );
+      if (badge instanceof HTMLElement) {
+        badge.style.display = 'none';
+        badge.style.opacity = '0';
+        badge.style.visibility = 'hidden';
+        badge.style.pointerEvents = 'none';
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    // Cleanup interval on unmount
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div>
       {/* Hero Section */}
@@ -78,11 +106,11 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProducts.map((product, idx) => {
-              const { ref, inView } = useInView();
+              const { ref, inView } = useInView<HTMLDivElement>();
               return (
               <div
                 key={product.id}
-                ref={ref as unknown as React.RefObject<HTMLDivElement>}
+                ref={ref}
                 className={`healthcare-card border-black p-6 group transform transition-all duration-1000 ease-out ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
                 style={{ transitionDelay: inView ? `${idx * 150}ms` : '0ms' }}
               >
@@ -159,14 +187,13 @@ export default function Home() {
             <div className="healthcare-card p-6">
               <div className="flex items-center gap-3 mb-6">
                 <Instagram className="w-8 h-8 text-primary" />
-                <div>
-                  <h3 className="font-heading font-semibold text-xl text-foreground">
-                    Latest from {companyInfo.instagram}
-                  </h3>
-                  <p className="text-muted-foreground text-sm">Newest 5 posts update automatically</p>
-                </div>
+             
               </div>
-              <InstagramFeed />
+              {/* Elfsight Instagram Feed Embed */}
+              <div
+                className="elfsight-app-b439b255-fe20-4c81-a95d-f040a45271c6"
+                data-elfsight-app-lazy
+              />
             </div>
             <div className="text-center">
               <Button className="btn-primary" asChild>
@@ -218,11 +245,11 @@ export default function Home() {
                 description: "Experienced professionals committed to your health and wellness"
               }
             ].map((item, index) => {
-              const { ref, inView } = useInView();
+              const { ref, inView } = useInView<HTMLDivElement>();
               return (
               <div
                 key={index}
-                ref={ref as unknown as React.RefObject<HTMLDivElement>}
+                ref={ref}
                 className={`healthcare-card border-black p-6 text-center group transform transition-all duration-1000 ease-out ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
                 style={{ transitionDelay: inView ? `${index * 150}ms` : '0ms' }}
               >
