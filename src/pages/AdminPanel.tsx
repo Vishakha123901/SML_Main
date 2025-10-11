@@ -72,7 +72,6 @@ export const BlogsAdmin = () => {
     "Digestive Health",
     "White Label Insights"
   ];
-
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [blogFormData, setBlogFormData] = useState<Omit<BlogPost, 'id' | 'publishDate'>>(initialBlogFormData);
   const [editingBlogPostId, setEditingBlogPostId] = useState<string | null>(null);
@@ -190,6 +189,7 @@ export const BlogsAdmin = () => {
               <Label htmlFor="blog-author">Author</Label>
               <Input id="blog-author" name="author" value={blogFormData.author} onChange={handleBlogChange} required />
             </div>
+
             <div className="grid gap-2">
               <Label htmlFor="blog-category">Category</Label>
               <select
@@ -205,6 +205,7 @@ export const BlogsAdmin = () => {
                 ))}
               </select>
             </div>
+
             <div className="grid gap-2 col-span-full">
               <Label htmlFor="blog-mainImage">Main Image URL</Label>
               <Input id="blog-mainImage" name="mainImage" value={blogFormData.mainImage} onChange={handleBlogChange} required />
@@ -228,7 +229,7 @@ export const BlogsAdmin = () => {
                     <option value="paragraph">Paragraph</option>
                     <option value="points">Points (one per line)</option>
                     <option value="image">Image URL</option>
-                    <option value="video">YouTube Video URL</option> {/* Updated label */}
+                    <option value="video">YouTube Video URL</option>
                   </select>
                   {
                     section.type === 'paragraph' || section.type === 'points' ? (
