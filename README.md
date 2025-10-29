@@ -1,17 +1,39 @@
+<<<<<<< HEAD
 # Welcome to Shree Murlidhar Lifescience Project
 
 ## Project info
 
 This is the official project for Shree Murlidhar Lifescience, a healthcare and nutrition products company.
+=======
+# Welcome to your Lovable project
+
+## Project info
+
+**URL**: https://lovable.dev/projects/e78e5c19-7c4b-4b28-afaf-90900bd8dcee
+>>>>>>> 9cb1f9b161312ffed5b44f4278ef26473ffa890a
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
+<<<<<<< HEAD
 **Use your preferred IDE**
 
 If you want to work locally using your own IDE, you can clone this repo and push changes.
 
+=======
+**Use Lovable**
+
+Simply visit the [Lovable Project](https://lovable.dev/projects/e78e5c19-7c4b-4b28-afaf-90900bd8dcee) and start prompting.
+
+Changes made via Lovable will be committed automatically to this repo.
+
+**Use your preferred IDE**
+
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+>>>>>>> 9cb1f9b161312ffed5b44f4278ef26473ffa890a
 
 Follow these steps:
 
@@ -55,7 +77,19 @@ This project is built with:
 
 ## How can I deploy this project?
 
+<<<<<<< HEAD
 You can deploy this project to platforms like Netlify, Vercel, or any static hosting service. Build the project using `npm run build` and upload the `dist` folder to your hosting provider.
 
 For detailed instructions, refer to your hosting provider's documentation.
 
+=======
+Simply open [Lovable](https://lovable.dev/projects/e78e5c19-7c4b-4b28-afaf-90900bd8dcee) and click on Share -> Publish.
+
+## Can I connect a custom domain to my Lovable project?
+
+Yes, you can!
+
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+>>>>>>> 9cb1f9b161312ffed5b44f4278ef26473ffa890a
